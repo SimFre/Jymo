@@ -25,9 +25,11 @@ export const usePrinterStore = defineStore("PrinterStore", {
     actions: {
         async loadLabel() {
             this.loading.label = true;
-            let filename = await path.appDataDir();
-            filename += "Hardware.dymo";
-            let input = await fs.readTextFile(filename);
+            const filename = "Default.dymo";
+            const resourcePath = await path.resolveResource("resources/" + filename);
+            console.log("Reading File:", resourcePath);
+
+            let input = await fs.readTextFile(resourcePath);
             input = input.replaceAll(/<(Color) ([^\/>]*?) *\/?> *(<\/\1>)?/ig, "<$1 $2> </$1>");
             input = input.replace(/^\uFEFF/gm, "").replace(/^\u00BB\u00BF/gm, "");
             this.labelTemplate = input;
@@ -37,7 +39,8 @@ export const usePrinterStore = defineStore("PrinterStore", {
         async loadPrinters() {
             this.loading.printers = true;
             this.labelPrinters = [];
-            const url = "https://127.0.0.1:41951/DYMO/DLS/Printing/GetPrinters";
+            const dymoBaseUrl = import.meta.env.VITE_DYMOURL;
+            const url = dymoBaseUrl + "/DYMO/DLS/Printing/GetPrinters";
             try {
                 const res = await fetch(url);
                 const data = await res.text();
@@ -63,7 +66,8 @@ export const usePrinterStore = defineStore("PrinterStore", {
             labelData = labelData.replaceAll(/%SERIALNUMBER%/ig, dataEntry.serialNumber ?? "");
             labelData = labelData.replaceAll(/%OBJECTURL%/ig, dataEntry._links.self ?? "");
             labelData = labelData.replaceAll(/%OBJECTLABEL%/ig, dataEntry.label ?? "");
-            const url = "https://127.0.0.1:41951/DYMO/DLS/Printing/RenderLabel";
+            const dymoBaseUrl = import.meta.env.VITE_DYMOURL;
+            const url = dymoBaseUrl + "/DYMO/DLS/Printing/RenderLabel";
             try {
                 const res = await fetch(url, {
                     method: "POST",
@@ -92,7 +96,8 @@ export const usePrinterStore = defineStore("PrinterStore", {
             labelData = labelData.replaceAll(/%OBJECTURL%/ig, dataEntry._links.self ?? "");
             labelData = labelData.replaceAll(/%OBJECTLABEL%/ig, dataEntry.label ?? "");
             try {
-                const url = "https://127.0.0.1:41951/DYMO/DLS/Printing/PrintLabel";
+                const dymoBaseUrl = import.meta.env.VITE_DYMOURL;
+                const url = dymoBaseUrl + "/DYMO/DLS/Printing/PrintLabel";
                 try {
                     let body = "printerName=" + encodeURIComponent(this.chosenPrinter);
                     body += "&labelXml=" + encodeURIComponent(labelData);

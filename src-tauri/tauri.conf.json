@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "jymo",
-    "version": "0.0.0"
+    "productName": "Jymo",
+    "version": "1.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -31,7 +31,8 @@
         "scope": [
           "$APP",
           "$APP/**",
-          "$DESKTOP/*"
+          "$DESKTOP/*",
+          "$RESOURCE/resources/*"
         ]
       },
       "path": {
@@ -40,7 +41,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Utility",
       "copyright": "",
       "deb": {
         "depends": []
@@ -62,7 +63,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "resources/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {

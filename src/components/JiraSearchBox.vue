@@ -30,11 +30,25 @@ const attributeMap = {
 async function searchCMDB() {
   loading.value = true;
   Dymo.multilabel = [];
-  searchKeyword.value = searchKeyword.value.trim();
-  searchKeyword.value = searchKeyword.value.replaceAll(/^AGC\+/ig, "AGC-");
-  const kw = searchKeyword.value;
+  let kw = searchKeyword.value;
+  kw = kw.trim();
+
+  // Replace + with - if scanned from barcode
+  kw = kw.replaceAll(/^AGC\+/ig, "AGC-");
+
+  // Take last 8 chars if scanned from barcode
+  if (kw.length == 20) {
+    kw = kw.substring(kw.length - 8)
+  }
+
+  // Take QR-code contents and build up objectId
+  const re = text.match(/^URL.+´(\d+)/);
+  if (re[1]) {
+    kw = "AGC-" + re[1];
+  }
+
   let url = baseURL + "/iql/objects?iql=";
-  url += `("${brand} User" LIKE ${kw} or Key=${kw} or "${brand} Serial Number" LIKE ${kw} or "Serial number" LIKE ${kw})`;
+  url += `("${brand} User" LIKE ${kw} or Key=${kw} or Name like ${kw} or "${brand} Serial Number" LIKE ${kw} or "Serial number" LIKE ${kw})`;
 
   try {
     const response = await fetch(url, {
