@@ -24,3 +24,4 @@ src/experimental
 *.njsproj
 *.sln
 *.sw?
+* copy.*

@@ -41,7 +41,7 @@ import Toast from 'primevue/toast';
 import ToggleButton from 'primevue/togglebutton';
 import TreeTable from 'primevue/treetable';
 
-import 'primevue/resources/themes/md-dark-indigo/theme.css' //theme
+import 'primevue/resources/themes/vela-blue/theme.css' //theme
 import 'primevue/resources/primevue.min.css' //core css
 import 'primeicons/primeicons.css' //icons
 

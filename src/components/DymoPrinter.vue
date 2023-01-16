@@ -40,3 +40,10 @@ const items = ref([
   </div>
 </template>
 
+<style scoped>
+.card {
+  text-align: center;
+  margin-top: 15px;
+}
+</style>
+

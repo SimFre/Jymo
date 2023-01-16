@@ -42,8 +42,9 @@ async function searchCMDB() {
   }
 
   // Take QR-code contents and build up objectId
-  const re = text.match(/^URL.+´(\d+)/);
-  if (re[1]) {
+  const re = kw.match(/^URL.+´(\d+)/);
+  console.log(re);
+  if (re !== null && re[1]) {
     kw = "AGC-" + re[1];
   }
 
@@ -81,8 +82,15 @@ async function searchCMDB() {
 <template>
   <div class="card">
     <form @submit.prevent="searchCMDB()">
-      <InputText v-model="searchKeyword" placeholder="AGC-" class="p-inputtext" />
+      <InputText v-model="searchKeyword" placeholder="AGC-" class="p-inputtext-lg" />
       <Button @click="searchCMDB()" icon="pi pi-search" :loading="loading" class="p-button-lg" />
     </form>
   </div>
 </template>
+
+<style scoped>
+.card {
+  text-align: center;
+  margin-bottom: 15px;
+}
+</style>
