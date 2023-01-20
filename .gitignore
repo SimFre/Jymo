@@ -12,6 +12,7 @@ dist
 dist-ssr
 private
 src/experimental
+src-tauri/resources/config.local.json
 *.local
 
 # Editor directories and files

@@ -1,18 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { fetch } from "@tauri-apps/api/http";
-import * as http from "@tauri-apps/api/http";
-import * as fs from "@tauri-apps/api/fs";
-import * as path from "@tauri-apps/api/path";
-import { usePiniaStore } from "@/pinia/PiniaStore.js";
+import { useConfigStore } from "@/pinia/ConfigStore.js";
 import { usePrinterStore } from "@/pinia/PrinterStore.js";
-const PiniaStore = usePiniaStore();
-const Dymo = usePrinterStore();
 
-const jiraBase = import.meta.env.VITE_JIRAURL;
-const authToken = import.meta.env.VITE_JIRATOKEN;
-const brand = import.meta.env.VITE_JIRABRAND;
-const baseURL = jiraBase + "/rest/insight/latest";
+const config = useConfigStore();
+const printer = usePrinterStore();
 const searchKeyword = ref("");
 const loading = ref(false);
 
@@ -29,7 +22,7 @@ const attributeMap = {
 
 async function searchCMDB() {
   loading.value = true;
-  Dymo.multilabel = [];
+  printer.multilabel = [];
   let kw = searchKeyword.value;
   kw = kw.trim();
 
@@ -43,18 +36,20 @@ async function searchCMDB() {
 
   // Take QR-code contents and build up objectId
   const re = kw.match(/^URL.+´(\d+)/);
-  console.log(re);
   if (re !== null && re[1]) {
     kw = "AGC-" + re[1];
   }
 
-  let url = baseURL + "/iql/objects?iql=";
+  const brand = config.jiraBrand;
+  let url = config.jiraAddress + "/iql/objects?iql=";
   url += `("${brand} User" LIKE ${kw} or Key=${kw} or Name like ${kw} or "${brand} Serial Number" LIKE ${kw} or "Serial number" LIKE ${kw})`;
+  url += ` and objectType IN ("Workstation", "Sweden Workstation", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset")`;
 
+  console.log("URL", url);
   try {
     const response = await fetch(url, {
       headers: {
-        Authorization: "Bearer " + authToken,
+        Authorization: "Bearer " + config.jiraToken,
       },
     });
     const searchResult = response.data;
@@ -69,10 +64,10 @@ async function searchCMDB() {
       });
     });
 
-    PiniaStore.cmdb = searchResult;
+    config.searchResult = searchResult;
     loading.value = false;
   } catch (err) {
-    PiniaStore.error(err);
+    config.error(err);
     loading.value = false;
   }
 }

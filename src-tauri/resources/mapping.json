@@ -1,0 +1,90 @@
+[
+    {
+        "name": "Sweden Monitor",
+        "id": 1689,
+        "attributes": [
+            {
+                "label": "Name",
+                "id": 10394
+            },
+            {
+                "label": "Manufacturer",
+                "id": 11285
+            },
+            {
+                "label": "Model",
+                "id": 10402
+            },
+            {
+                "label": "Serial number",
+                "id": 10523
+            },
+            {
+                "label": "Status",
+                "id": 10399,
+                "options": [
+                    {
+                        "label": "Active",
+                        "value": 1
+                    },
+                    {
+                        "label": "In Stock",
+                        "value": 43
+                    },
+                    {
+                        "label": "Stopped",
+                        "value": 6
+                    },
+                    {
+                        "label": "Support Requested",
+                        "value": 4
+                    }
+                ]
+            },
+            {
+                "label": "Assigned User",
+                "id": 10524
+            }
+        ]
+    },
+    {
+        "name": "Sweden Workstation",
+        "id": 1408,
+        "attributes": [
+            {
+                "label": "Name",
+                "id": 10394
+            },
+            {
+                "label": "Model",
+                "id": 1361
+            },
+            {
+                "label": "Intility Serial Number",
+                "id": 3849
+            },
+            {
+                "label": "Status",
+                "id": 4021,
+                "options": [
+                    {
+                        "label": "Active",
+                        "value": 9
+                    },
+                    {
+                        "label": "Critical Incident",
+                        "value": 43
+                    },
+                    {
+                        "label": "In Stock",
+                        "value": 2
+                    }
+                ]
+            },
+            {
+                "label": "Assigned User",
+                "id": 11418
+            }
+        ]
+    }
+]

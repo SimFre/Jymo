@@ -43,6 +43,7 @@ import TreeTable from 'primevue/treetable';
 
 import 'primevue/resources/themes/vela-blue/theme.css' //theme
 import 'primevue/resources/primevue.min.css' //core css
+import 'primeflex/primeflex.css' // flex
 import 'primeicons/primeicons.css' //icons
 
 const app = createApp(App);
