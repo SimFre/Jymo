@@ -7,6 +7,7 @@ import SearchBox from "./components/SearchBox.vue";
 import SearchResults from "./components/SearchResults.vue";
 import LabelPrinter from "./components/LabelPrinter.vue";
 import LabelPreview from "./components/LabelPreview.vue";
+// import InvokeRust from "./components/InvokeRust.vue";
 
 const config = useConfigStore();
 const printer = usePrinterStore();
@@ -23,17 +24,25 @@ config.init().then((p1) => {
 </script>
 
 <template>
-  <div v-if="loaded" class="container">
-    <div class="row">
-      <SearchBox />
+  <div class="card">
+    <div v-if="loaded" class="card-container">
+      <div class="block p-2 border-round mb-1 align-items-center justify-content-center">
+        <SearchBox />
+      </div>
+
+      <div class="block p-1 border-round mb-1 align-items-center justify-content-center">
+        <SearchResults />
+      </div>
+
+      <div class="block p-1 border-round mb-1 align-items-center justify-content-center">
+        <LabelPrinter />
+      </div>
+      <LabelPreview />
     </div>
-    <SearchResults />
-    <LabelPrinter />
-    <LabelPreview />
-  </div>
-  <div v-else class="container">
-    <div class="row">
-      <i class="pi pi-spin pi-cog" style="font-size: 12rem"></i>
+    <div v-else class="grid">
+      <div class="flex align-items-center justify-content-center">
+        <ProgressSpinner />
+      </div>
     </div>
   </div>
 

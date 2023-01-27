@@ -27,22 +27,17 @@ const items = ref([
 </script>
 
 <template>
-  <div class="row">
-    <div class="card">
-      <!-- <Dropdown v-model="printer.chosenPrinter" :options="printer.labelPrinters" placeholder="Printer" class="p-inputtext-sm"
-        :loading="printer.loading.printers" /> -->
-      <SplitButton :model="items"><Button @click="printer.printAll()" icon="pi pi-print" class="p-button-lg"
-          :label="'Print ' + (printer.multilabel?.length ? printer.multilabel.length : 0) + ' labels'"
-          :loading="printer.loading.printing"></Button>
-      </SplitButton>
+  <div class="card">
+    <div class="flex justify-content-center flex-wrap card-container yellow-container">
+      <div class="flex align-items-center justify-content-center w-6 m-3">
+        <!-- <Dropdown v-model="printer.chosenPrinter" :options="printer.labelPrinters" placeholder="Printer" class="p-inputtext-sm"
+              :loading="printer.loading.printers" /> -->
+        <SplitButton :model="items" class="p-button-secondary"><Button @click="printer.printAll()" icon="pi pi-print"
+            class="p-button-lg "
+            :label="'Print ' + (printer.multilabel?.length ? printer.multilabel.length : 0) + ' labels'"
+            :loading="printer.loading.printing"></Button>
+        </SplitButton>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.card {
-  text-align: center;
-  margin-top: 15px;
-}
-</style>
-

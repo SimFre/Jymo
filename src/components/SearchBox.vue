@@ -20,6 +20,7 @@ const attributeMap = {
   10861: "modelName", // Mobile
 };
 
+
 async function searchCMDB() {
   loading.value = true;
   printer.multilabel = [];
@@ -29,21 +30,25 @@ async function searchCMDB() {
   // Replace + with - if scanned from barcode
   kw = kw.replaceAll(/^AGC\+/ig, "AGC-");
 
+  // Take QR-code contents and build up objectId
+  const re = kw.match(/^(http|URL).+(´|=|\/|-)([1-9][0-9]+)$/i);
+  console.log("RE:", re);
+
   // Take last 8 chars if scanned from barcode
   if (kw.length == 20) {
     kw = kw.substring(kw.length - 8)
   }
-
-  // Take QR-code contents and build up objectId
-  const re = kw.match(/^URL.+´(\d+)/);
-  if (re !== null && re[1]) {
-    kw = "AGC-" + re[1];
+  else if (kw.length >= 5 && kw.length <= 7 && Number.isInteger(kw)) {
+    kw = "AGC-" + kw;
+  }
+  else if (re !== null && re[3]) {
+    kw = "AGC-" + re[3];
   }
 
   const brand = config.jiraBrand;
   let url = config.jiraAddress + "/iql/objects?iql=";
-  url += `("${brand} User" LIKE ${kw} or Key=${kw} or Name like ${kw} or "${brand} Serial Number" LIKE ${kw} or "Serial number" LIKE ${kw})`;
-  url += ` and objectType IN ("Workstation", "Sweden Workstation", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset")`;
+  url += `("${brand} User" like ${kw} or Key like ${kw} or Name like ${kw} or "${brand} Serial Number" LIKE ${kw} or "Serial number" LIKE ${kw})`;
+  url += ` and objectType IN ("Workstation", "Sweden Workstation", "Sweden Workstation Archive", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset")`;
 
   console.log("URL", url);
   try {
@@ -75,17 +80,26 @@ async function searchCMDB() {
 </script>
 
 <template>
-  <div class="card">
-    <form @submit.prevent="searchCMDB()">
-      <InputText v-model="searchKeyword" placeholder="AGC-" class="p-inputtext-lg" />
-      <Button @click="searchCMDB()" icon="pi pi-search" :loading="loading" class="p-button-lg" />
-    </form>
-  </div>
+  <form @submit.prevent="searchCMDB()">
+    <div class="card">
+      <div class="flex justify-content-center flex-wrap card-container yellow-container">
+        <div class="flex align-items-center justify-content-center w-6 border-1 border-round surface-border">
+          <div class="p-inputgroup">
+            <InputText v-model.lazy="searchKeyword" placeholder="AGC-" @change="searchCMDB()" v-debounce="800"
+              class="p-inputtext-lg" style="border: 0px" ref="searchField" />
+            <Button @click="searchKeyword = ''; $refs.searchField.focus()" icon="pi pi-trash" :loading="loading"
+              class="p-button-lg p-button-secondary p-button-text" />
+            <Button @click="searchCMDB()" icon="pi pi-search" :loading="loading"
+              class="p-button-lg p-button-success p-button-text" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="flex justify-content-start flex-wrap card-container ">
+        <div class="flex align-items-center justify-content-center w-6">
+        </div>
+      </div>
+    </div>
+  </form>
 </template>
-
-<style scoped>
-.card {
-  text-align: center;
-  margin-bottom: 15px;
-}
-</style>

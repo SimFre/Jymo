@@ -31,6 +31,7 @@ import Listbox from "primevue/listbox";
 import Menu from 'primevue/menu';
 import MultiSelect from "primevue/multiselect";
 import ProgressBar from 'primevue/progressbar';
+import ProgressSpinner from 'primevue/progressspinner';
 import Row from "primevue/row"; //optional for row
 import Skeleton from 'primevue/skeleton';
 import SplitButton from "primevue/splitbutton";
@@ -41,10 +42,12 @@ import Toast from 'primevue/toast';
 import ToggleButton from 'primevue/togglebutton';
 import TreeTable from 'primevue/treetable';
 
-import 'primevue/resources/themes/vela-blue/theme.css' //theme
+import 'primevue/resources/themes/saga-blue/theme.css' //theme
 import 'primevue/resources/primevue.min.css' //core css
 import 'primeflex/primeflex.css' // flex
 import 'primeicons/primeicons.css' //icons
+
+import debounce from '@/libs/debouncer.js';
 
 const app = createApp(App);
 
@@ -80,6 +83,7 @@ app.component("Menu", Menu);
 app.component("MultiSelect", MultiSelect);
 app.component("Row", Row);
 app.component("ProgressBar", ProgressBar);
+app.component("ProgressSpinner", ProgressSpinner);
 app.component("Skeleton", Skeleton)
 app.component("SplitButton", SplitButton)
 app.component("TabView", TabView);
@@ -88,6 +92,8 @@ app.component("Textarea", Textarea);
 app.component("Toast", Toast);
 app.component("ToggleButton", ToggleButton);
 app.component("TreeTable", TreeTable);
+
+app.directive('debounce', (el, binding) => debounce(el, binding))
 
 app.mount("#app");
 
