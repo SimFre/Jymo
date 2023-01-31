@@ -80,14 +80,14 @@ async function searchCMDB() {
 </script>
 
 <template>
-  <form @submit.prevent="searchCMDB()">
+  <form @submit.prevent="searchCMDB()" ref="searchForm">
     <div class="card">
       <div class="flex justify-content-center flex-wrap card-container yellow-container">
         <div class="flex align-items-center justify-content-center w-6 border-1 border-round surface-border">
           <div class="p-inputgroup">
             <InputText v-model.lazy="searchKeyword" placeholder="AGC-" @change="searchCMDB()" v-debounce="800"
-              class="p-inputtext-lg" style="border: 0px" ref="searchField" />
-            <Button @click="searchKeyword = ''; $refs.searchField.focus()" icon="pi pi-trash" :loading="loading"
+              class="p-inputtext-lg" style="border: 0px" name="keyword" />
+            <Button @click="searchKeyword = ''; $refs.searchForm.keyword.focus()" icon="pi pi-trash" :loading="loading"
               class="p-button-lg p-button-secondary p-button-text" />
             <Button @click="searchCMDB()" icon="pi pi-search" :loading="loading"
               class="p-button-lg p-button-success p-button-text" />
