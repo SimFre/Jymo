@@ -7,6 +7,7 @@ import SearchBox from "./components/SearchBox.vue";
 import SearchResults from "./components/SearchResults.vue";
 import LabelPrinter from "./components/LabelPrinter.vue";
 import LabelPreview from "./components/LabelPreview.vue";
+import Version from "./components/Version.vue";
 // import InvokeRust from "./components/InvokeRust.vue";
 
 const config = useConfigStore();
@@ -24,6 +25,7 @@ config.init().then((p1) => {
 </script>
 
 <template>
+
   <div class="card">
     <div v-if="loaded" class="card-container">
       <div class="block p-2 border-round mb-1 align-items-center justify-content-center">
@@ -33,7 +35,6 @@ config.init().then((p1) => {
       <div class="block p-1 border-round mb-1 align-items-center justify-content-center">
         <SearchResults />
       </div>
-
       <div class="block p-1 border-round mb-1 align-items-center justify-content-center">
         <LabelPrinter />
       </div>
@@ -45,6 +46,7 @@ config.init().then((p1) => {
       </div>
     </div>
   </div>
+  <Version></Version>
 
   <!-- <samp>{{ printer }}</samp>-->
   <!-- <samp>{{ config }}</samp> -->

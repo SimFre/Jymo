@@ -7,6 +7,10 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  define: {
+    '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
+    '__APP_NAME__': JSON.stringify(process.env.npm_package_name),
+  },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   // prevent vite from obscuring rust errors
   clearScreen: false,
