@@ -6,9 +6,9 @@ const printer = usePrinterStore();
 </script>
 
 <template>
-  <DataTable v-if="config.searchResult?.objectEntries" :value="config.searchResult?.objectEntries"
-    responsiveLayout="scroll" showGridlines stripedRows class="p-datatable-sm" dataKey="objectKey" removableSort
-    v-model:selection="printer.multilabel" selectionMode="multiple" :metaKeySelection="false">
+  <DataTable v-if="config.searchResult" :value="config.searchResult" responsiveLayout="scroll" showGridlines stripedRows
+    class="p-datatable-sm" dataKey="objectKey" removableSort v-model:selection="printer.multilabel"
+    selectionMode="multiple" :metaKeySelection="false">
     <Column field="objectKey" header="Key" :sortable="true">
       <template #body="sp">
         <a :href="sp.data._links.self" target="_blank">{{ sp.data.objectKey }}</a>

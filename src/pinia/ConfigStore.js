@@ -1,5 +1,5 @@
 
-import { defineStore } from "pinia";
+import { defineStore, acceptHMRUpdate } from "pinia";
 import * as path from "@tauri-apps/api/path";
 import * as fs from "@tauri-apps/api/fs";
 
@@ -13,7 +13,8 @@ export const useConfigStore = defineStore("ConfigStore", {
       dymoAddress: null,
       jiraAddress: null,
       jiraToken: null,
-      jiraBrand: null
+      jiraBrand: null,
+      searchTimeout: null,
     }
   },
   actions: {
@@ -30,6 +31,7 @@ export const useConfigStore = defineStore("ConfigStore", {
         this.jiraAddress = await config.jiraAddress;
         this.jiraToken = await config.jiraToken;
         this.jiraBrand = await config.jiraBrand;
+        this.searchTimeout = await config.searchTimeout ?? 5000;
         // if (allowed.includes(key)) {
         //     Does not work:
         //     this[key].value = value;
@@ -41,9 +43,20 @@ export const useConfigStore = defineStore("ConfigStore", {
       }
     },
 
+    appendSearch(entry) {
+      this.searchResult.push(entry);
+    },
+
+    clearSearch() {
+      this.searchResult = [];
+    },
+
     error(e) {
       this.exceptionObject = e;
       this.exceptionDisplay = true;
     },
   },
 });
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useConfigStore, import.meta.hot));
+}

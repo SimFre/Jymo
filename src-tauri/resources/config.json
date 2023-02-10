@@ -2,5 +2,6 @@
     "dymoAddress": "https://127.0.0.1:41951",
     "jiraAddress": "https://jira.example.com",
     "jiraToken": "aaaaaaaaaaaaaaaaaaaaaaa",
-    "jiraBrand": "Company Name"
+    "jiraBrand": "Company Name",
+    "searchTimeout": 10000
 }

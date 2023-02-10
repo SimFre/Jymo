@@ -1,6 +1,6 @@
 
 import { ref } from "vue";
-import { defineStore } from "pinia";
+import { defineStore, acceptHMRUpdate } from "pinia";
 import * as fs from "@tauri-apps/api/fs";
 import * as path from "@tauri-apps/api/path";
 
@@ -142,3 +142,6 @@ export const usePrinterStore = defineStore("PrinterStore", {
     },
   },
 });
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(usePrinterStore, import.meta.hot));
+}

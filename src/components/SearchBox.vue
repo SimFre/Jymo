@@ -9,6 +9,8 @@ const printer = usePrinterStore();
 const searchKeyword = ref("");
 const loading = ref(false);
 
+let clearInputTimeout = null;
+
 const attributeMap = {
   3851: "userFullname", // Workstation, Monitor
   10858: "userFullname", // Mobile
@@ -23,7 +25,9 @@ const attributeMap = {
 
 async function searchCMDB() {
   loading.value = true;
-  printer.multilabel = [];
+  clearTimeout(clearInputTimeout);
+  config.clearSearch();
+
   let kw = searchKeyword.value;
   kw = kw.trim();
 
@@ -32,7 +36,6 @@ async function searchCMDB() {
 
   // Take QR-code contents and build up objectId
   const re = kw.match(/^(http|URL).+(´|=|\/|-)([1-9][0-9]+)$/i);
-  console.log("RE:", re);
 
   // Take last 8 chars if scanned from barcode
   if (kw.length == 20) {
@@ -47,10 +50,10 @@ async function searchCMDB() {
 
   const brand = config.jiraBrand;
   let url = config.jiraAddress + "/iql/objects?iql=";
-  url += `("${brand} User" like ${kw} or Key like ${kw} or Name like ${kw} or "${brand} Serial Number" LIKE ${kw} or "Serial number" LIKE ${kw})`;
+  url += `("${brand} User" like "${kw}" or Key like "${kw}" or Name like "${kw}" or "${brand} Serial Number" LIKE "${kw}" or "Serial number" LIKE "${kw}")`;
   url += ` and objectType IN ("Workstation", "Sweden Workstation", "Sweden Workstation Archive", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset")`;
 
-  console.log("URL", url);
+  //console.log("URL", url);
   try {
     const response = await fetch(url, {
       headers: {
@@ -59,7 +62,7 @@ async function searchCMDB() {
     });
     const searchResult = response.data;
 
-    searchResult.objectEntries.map((o) => {
+    searchResult.objectEntries.map((o, index) => {
       o.attributes.map((attributeEntry) => {
         const id = attributeEntry.objectTypeAttributeId;
         const attrName = attributeMap[id];
@@ -67,13 +70,22 @@ async function searchCMDB() {
           o[attrName] = attributeEntry.objectAttributeValues[0]?.displayValue ?? "n/a";
         }
       });
+      config.appendSearch(o);
     });
 
-    config.searchResult = searchResult;
+
+    //config.searchResult = searchResult;
     loading.value = false;
   } catch (err) {
+    console.error("Exception", err);
     config.error(err);
     loading.value = false;
+  }
+
+  if (config.searchTimeout) {
+    clearInputTimeout = setTimeout(function () {
+      searchKeyword.value = "";
+    }, config.searchTimeout);
   }
 }
 

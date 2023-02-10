@@ -29,7 +29,9 @@ import InputMask from 'primevue/inputmask';
 import InputText from "primevue/inputtext";
 import Listbox from "primevue/listbox";
 import Menu from 'primevue/menu';
+import MenuBar from 'primevue/menubar';
 import MultiSelect from "primevue/multiselect";
+import Panel from 'primevue/panel';
 import ProgressBar from 'primevue/progressbar';
 import ProgressSpinner from 'primevue/progressspinner';
 import Row from "primevue/row"; //optional for row
@@ -80,8 +82,10 @@ app.component("InputSwitch", InputSwitch);
 app.component("InputText", InputText);
 app.component("Listbox", Listbox);
 app.component("Menu", Menu);
+app.component("MenuBar", MenuBar);
 app.component("MultiSelect", MultiSelect);
 app.component("Row", Row);
+app.component("Panel", Panel);
 app.component("ProgressBar", ProgressBar);
 app.component("ProgressSpinner", ProgressSpinner);
 app.component("Skeleton", Skeleton)

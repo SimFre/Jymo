@@ -9,3 +9,8 @@ samp {
   padding: 5px;
   text-align: left;
 }
+
+#app {
+  font-family: var(--font-family);
+  color: var(--text-color);
+}
