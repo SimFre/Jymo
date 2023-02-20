@@ -1,3 +1,3 @@
 <template>
-  Jymo!
+  Dummy!
 </template>

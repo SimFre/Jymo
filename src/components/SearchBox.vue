@@ -22,6 +22,10 @@ const attributeMap = {
   10861: "modelName", // Mobile
 };
 
+async function clearAndFocus() {
+  searchKeyword.value = '';
+  $refs.searchForm.keyword.focus();
+}
 
 async function searchCMDB() {
   loading.value = true;
@@ -84,7 +88,7 @@ async function searchCMDB() {
 
   if (config.searchTimeout) {
     clearInputTimeout = setTimeout(function () {
-      searchKeyword.value = "";
+      clearAndFocus();
     }, config.searchTimeout);
   }
 }
@@ -99,7 +103,7 @@ async function searchCMDB() {
           <div class="p-inputgroup">
             <InputText v-model.lazy="searchKeyword" placeholder="AGC-" @change="searchCMDB()" v-debounce="800"
               class="p-inputtext-lg" style="border: 0px" name="keyword" />
-            <Button @click="searchKeyword = ''; $refs.searchForm.keyword.focus()" icon="pi pi-trash" :loading="loading"
+            <Button @click="clearAndFocus()" icon="pi pi-trash" :loading="loading"
               class="p-button-lg p-button-secondary p-button-text" />
             <Button @click="searchCMDB()" icon="pi pi-search" :loading="loading"
               class="p-button-lg p-button-success p-button-text" />
