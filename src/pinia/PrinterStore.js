@@ -88,6 +88,10 @@ export const usePrinterStore = defineStore("PrinterStore", {
       this.loading.preview = false;
     },
 
+    async closePreview() {
+      this.labelPreview = false;
+    },
+
     async printLabel(dataEntry) {
       this.loading['prn' + dataEntry.id] = true;
       let labelData = this.labelTemplate;

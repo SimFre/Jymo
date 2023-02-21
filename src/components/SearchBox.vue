@@ -8,7 +8,7 @@ const config = useConfigStore();
 const printer = usePrinterStore();
 const searchKeyword = ref("");
 const loading = ref(false);
-
+const searchForm = ref(null);
 let clearInputTimeout = null;
 
 const attributeMap = {
@@ -22,9 +22,28 @@ const attributeMap = {
   10861: "modelName", // Mobile
 };
 
+const printerSubscription = printer.$onAction(
+  ({
+    name, // name of the action
+    store, // store instance, same as `someStore`
+    args, // array of parameters passed to the action
+    after, // hook after the action returns or resolves
+    onError, // hook if the action throws or rejects
+  }) => {
+    // this will trigger if the action succeeds and after it has fully run.
+    // it waits for any returned promised
+    after((result) => {
+      if (name == "printLabel" || name == "closePreview") {
+        clearAndFocus();
+      }
+    })
+  }
+);
+
 async function clearAndFocus() {
-  searchKeyword.value = '';
-  $refs.searchForm.keyword.focus();
+  clearTimeout(clearInputTimeout);
+  searchKeyword.value = "";
+  searchForm.value.keyword.focus();
 }
 
 async function searchCMDB() {

@@ -26,8 +26,6 @@ const printer = usePrinterStore();
           class="p-button-sm p-button-rounded p-button-success p-button-text" />
       </template>
     </Column>
-
-
   </DataTable>
 </template>
 
