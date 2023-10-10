@@ -17,9 +17,14 @@ const attributeMap = {
   3849: "serialNumber", // Workstation
   10523: "serialNumber", // Monitor
   10857: "serialNumber", // Mobile
+  10795: "serialNumber", // Printer
+  11859: "serialNumber", // UPS
+  10957: "serialNumber", // Other
   1361: "modelName", // Workstation
   10402: "modelName", // Monitor
   10861: "modelName", // Mobile
+  10229: "modelName", // Printer
+  11858: "modelName", // UPS
 };
 
 const printerSubscription = printer.$onAction(
