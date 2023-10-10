@@ -36,7 +36,7 @@ const printerSubscription = printer.$onAction(
       if (name == "printLabel" || name == "closePreview") {
         clearAndFocus();
       }
-    })
+    });
   }
 );
 
@@ -55,26 +55,24 @@ async function searchCMDB() {
   kw = kw.trim();
 
   // Replace + with - if scanned from barcode
-  kw = kw.replaceAll(/^AGC\+/ig, "AGC-");
+  kw = kw.replaceAll(/^AGC\+/gi, "AGC-");
 
   // Take QR-code contents and build up objectId
   const re = kw.match(/^(http|URL).+(´|=|\/|-)([1-9][0-9]+)$/i);
 
   // Take last 8 chars if scanned from barcode
   if (kw.length == 20) {
-    kw = kw.substring(kw.length - 8)
-  }
-  else if (kw.length >= 5 && kw.length <= 7 && Number.isInteger(kw)) {
+    kw = kw.substring(kw.length - 8);
+  } else if (kw.length >= 5 && kw.length <= 7 && Number.isInteger(kw)) {
     kw = "AGC-" + kw;
-  }
-  else if (re !== null && re[3]) {
+  } else if (re !== null && re[3]) {
     kw = "AGC-" + re[3];
   }
 
   const brand = config.jiraBrand;
   let url = config.jiraAddress + "/iql/objects?iql=";
   url += `("${brand} User" like "${kw}" or Key like "${kw}" or Name like "${kw}" or "${brand} Serial Number" LIKE "${kw}" or "Serial number" LIKE "${kw}")`;
-  url += ` and objectType IN ("Workstation", "Sweden Workstation", "Sweden Workstation Archive", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset")`;
+  url += ` and objectType IN ("Workstation", "Sweden Workstation", "Sweden Workstation Archive", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset", "Sweden Other", "Sweden Printer", "Sweden UPS")`;
 
   //console.log("URL", url);
   try {
@@ -90,12 +88,12 @@ async function searchCMDB() {
         const id = attributeEntry.objectTypeAttributeId;
         const attrName = attributeMap[id];
         if (attrName !== undefined) {
-          o[attrName] = attributeEntry.objectAttributeValues[0]?.displayValue ?? "n/a";
+          o[attrName] =
+            attributeEntry.objectAttributeValues[0]?.displayValue ?? "n/a";
         }
       });
       config.appendSearch(o);
     });
-
 
     //config.searchResult = searchResult;
     loading.value = false;
@@ -111,29 +109,46 @@ async function searchCMDB() {
     }, config.searchTimeout);
   }
 }
-
 </script>
 
 <template>
   <form @submit.prevent="searchCMDB()" ref="searchForm">
     <div class="card">
-      <div class="flex justify-content-center flex-wrap card-container yellow-container">
-        <div class="flex align-items-center justify-content-center w-6 border-1 border-round surface-border">
+      <div
+        class="flex justify-content-center flex-wrap card-container yellow-container"
+      >
+        <div
+          class="flex align-items-center justify-content-center w-6 border-1 border-round surface-border"
+        >
           <div class="p-inputgroup">
-            <InputText v-model.lazy="searchKeyword" placeholder="AGC-" @change="searchCMDB()" v-debounce="800"
-              class="p-inputtext-lg" style="border: 0px" name="keyword" />
-            <Button @click="clearAndFocus()" icon="pi pi-trash" :loading="loading"
-              class="p-button-lg p-button-secondary p-button-text" />
-            <Button @click="searchCMDB()" icon="pi pi-search" :loading="loading"
-              class="p-button-lg p-button-success p-button-text" />
+            <InputText
+              v-model.lazy="searchKeyword"
+              placeholder="AGC-"
+              @change="searchCMDB()"
+              v-debounce="800"
+              class="p-inputtext-lg"
+              style="border: 0px"
+              name="keyword"
+            />
+            <Button
+              @click="clearAndFocus()"
+              icon="pi pi-trash"
+              :loading="loading"
+              class="p-button-lg p-button-secondary p-button-text"
+            />
+            <Button
+              @click="searchCMDB()"
+              icon="pi pi-search"
+              :loading="loading"
+              class="p-button-lg p-button-success p-button-text"
+            />
           </div>
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="flex justify-content-start flex-wrap card-container ">
-        <div class="flex align-items-center justify-content-center w-6">
-        </div>
+      <div class="flex justify-content-start flex-wrap card-container">
+        <div class="flex align-items-center justify-content-center w-6"> </div>
       </div>
     </div>
   </form>
