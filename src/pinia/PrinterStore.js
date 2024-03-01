@@ -1,4 +1,3 @@
-
 import { ref } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import * as fs from "@tauri-apps/api/fs";
@@ -19,9 +18,9 @@ export const usePrinterStore = defineStore("PrinterStore", {
         printers: true,
         label: true,
         preview: false,
-        printing: false
-      }
-    }
+        printing: false,
+      },
+    };
   },
   actions: {
     async loadLabel() {
@@ -31,7 +30,10 @@ export const usePrinterStore = defineStore("PrinterStore", {
       console.log("Reading File:", resourcePath);
 
       let input = await fs.readTextFile(resourcePath);
-      input = input.replaceAll(/<(Color) ([^\/>]*?) *\/?> *(<\/\1>)?/ig, "<$1 $2> </$1>");
+      input = input.replaceAll(
+        /<(Color) ([^\/>]*?) *\/?> *(<\/\1>)?/gi,
+        "<$1 $2> </$1>"
+      );
       input = input.replace(/^\uFEFF/gm, "").replace(/^\u00BB\u00BF/gm, "");
       this.labelTemplate = input;
       this.loading.label = false;
@@ -62,18 +64,30 @@ export const usePrinterStore = defineStore("PrinterStore", {
     async previewLabel(dataEntry) {
       this.loading.preview = true;
       let labelData = this.labelTemplate;
-      labelData = labelData.replaceAll(/%OBJECTID%/ig, dataEntry.id);
-      labelData = labelData.replaceAll(/%OBJECTKEY%/ig, dataEntry.objectKey);
-      labelData = labelData.replaceAll(/%SERIALNUMBER%/ig, dataEntry.serialNumber ?? "");
-      labelData = labelData.replaceAll(/%OBJECTURL%/ig, dataEntry._links.self ?? "");
-      labelData = labelData.replaceAll(/%OBJECTLABEL%/ig, dataEntry.label ?? "");
+      labelData = labelData.replaceAll(/%OBJECTID%/gi, dataEntry.id);
+      labelData = labelData.replaceAll(/%OBJECTKEY%/gi, dataEntry.objectKey);
+      labelData = labelData.replaceAll(
+        /%SERIALNUMBER%/gi,
+        dataEntry.serialNumber ?? ""
+      );
+      labelData = labelData.replaceAll(
+        /%OBJECTURL%/gi,
+        dataEntry._links.self ?? ""
+      );
+      labelData = labelData.replaceAll(
+        /%OBJECTLABEL%/gi,
+        (dataEntry.label == dataEntry.serialNumber
+          ? dataEntry.modelName
+          : dataEntry.label) ?? ""
+      );
+
       const url = this.webServiceUrl + "/DYMO/DLS/Printing/RenderLabel";
       console.log("URL:", url);
       try {
         const res = await fetch(url, {
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded",
           },
           body: "labelXml=" + encodeURIComponent(labelData),
         });
@@ -93,13 +107,24 @@ export const usePrinterStore = defineStore("PrinterStore", {
     },
 
     async printLabel(dataEntry) {
-      this.loading['prn' + dataEntry.id] = true;
+      this.loading["prn" + dataEntry.id] = true;
       let labelData = this.labelTemplate;
-      labelData = labelData.replaceAll(/%OBJECTID%/ig, dataEntry.id);
-      labelData = labelData.replaceAll(/%OBJECTKEY%/ig, dataEntry.objectKey);
-      labelData = labelData.replaceAll(/%SERIALNUMBER%/ig, dataEntry.serialNumber ?? "");
-      labelData = labelData.replaceAll(/%OBJECTURL%/ig, dataEntry._links.self ?? "");
-      labelData = labelData.replaceAll(/%OBJECTLABEL%/ig, dataEntry.label ?? "");
+      labelData = labelData.replaceAll(/%OBJECTID%/gi, dataEntry.id);
+      labelData = labelData.replaceAll(/%OBJECTKEY%/gi, dataEntry.objectKey);
+      labelData = labelData.replaceAll(
+        /%SERIALNUMBER%/gi,
+        dataEntry.serialNumber ?? ""
+      );
+      labelData = labelData.replaceAll(
+        /%OBJECTURL%/gi,
+        dataEntry._links.self ?? ""
+      );
+      labelData = labelData.replaceAll(
+        /%OBJECTLABEL%/gi,
+        (dataEntry.label == dataEntry.serialNumber
+          ? dataEntry.modelName
+          : dataEntry.label) ?? ""
+      );
       try {
         const url = this.webServiceUrl + "/DYMO/DLS/Printing/PrintLabel";
         console.log("URL:", url);
@@ -109,12 +134,12 @@ export const usePrinterStore = defineStore("PrinterStore", {
           const res = await fetch(url, {
             method: "POST",
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
+              "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: body
+            body: body,
           });
           const data = await res.json();
-          this.loading['prn' + dataEntry.id] = false;
+          this.loading["prn" + dataEntry.id] = false;
           return true;
         } catch (err) {
           this.error(err);
