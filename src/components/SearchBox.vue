@@ -75,11 +75,12 @@ async function searchCMDB() {
   }
 
   const brand = config.jiraBrand;
+  // Yes there are two serial number attributes with different casing
   let url = config.jiraAddress + "/iql/objects?iql=";
-  url += `("${brand} User" like "${kw}" or Key like "${kw}" or Name like "${kw}" or "${brand} Serial Number" LIKE "${kw}" or "Serial number" LIKE "${kw}")`;
+  url += `("Assigned User" like "${kw}" or Key like "${kw}" or Name like "${kw}" or "Serial Number" LIKE "${kw}" or "Serial number" LIKE "${kw}")`;
   url += ` and objectType IN ("Workstation", "Sweden Workstation", "Sweden Workstation Archive", "Monitor", "Sweden Monitor", "Mobile Phone", "Sweden Mobile Phone", "Headset", "Sweden Headset", "Sweden Other", "Sweden Printer", "Sweden UPS")`;
 
-  //console.log("URL", url);
+  console.log("URL", url);
   try {
     const response = await fetch(url, {
       headers: {
@@ -87,6 +88,7 @@ async function searchCMDB() {
       },
     });
     const searchResult = response.data;
+    console.log("Search Result", searchResult);
 
     searchResult.objectEntries.map((o, index) => {
       o.attributes.map((attributeEntry) => {
